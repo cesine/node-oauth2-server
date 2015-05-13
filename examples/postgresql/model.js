@@ -82,15 +82,17 @@ model.getRefreshToken = function (bearerToken, callback) {
   });
 };
 
-// This will very much depend on your setup, I wouldn't advise doing anything exactly like this but
-// it gives an example of how to use the method to resrict certain grant types
-var authorizedClientIds = ['abc1', 'def2'];
+// This will very much depend on your setup. This example assumes the grant_types are stored in the database with the client.
 model.grantTypeAllowed = function (clientId, grantType, callback) {
-  if (grantType === 'password') {
-    return callback(false, authorizedClientIds.indexOf(clientId.toLowerCase()) >= 0);
-  }
-
-  callback(false, true);
+  pg.connect(connString, function(err, client, done) {
+    if (err) return callback(err);
+    client.query('SELECT client_id FROM oauth_clients ' + 'WHERE client_id = $1 AND grant_type = $2', [clientId, grantType],
+      function(err, result) {
+        if (err) return callback(err);
+        callback(false, result.rowCount ? true : false);
+        done();
+      });
+  });
 };
 
 model.saveAccessToken = function (accessToken, clientId, expires, userId, callback) {

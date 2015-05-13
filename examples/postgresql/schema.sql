@@ -43,10 +43,11 @@ CREATE TABLE oauth_access_tokens (
 --
 -- Name: oauth_clients; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
-
+DROP TABLE oauth_clients;
 CREATE TABLE oauth_clients (
     client_id text NOT NULL,
     client_secret text NOT NULL,
+    grant_type text NOT NULL,
     redirect_uri text NOT NULL
 );
 
