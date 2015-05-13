@@ -95,11 +95,11 @@ model.grantTypeAllowed = function (clientId, grantType, callback) {
   });
 };
 
-model.saveAccessToken = function (accessToken, clientId, expires, userId, callback) {
+model.saveAccessToken = function (accessToken, clientId, expires, user, callback) {
   pg.connect(connString, function (err, client, done) {
     if (err) return callback(err);
     client.query('INSERT INTO oauth_access_tokens(access_token, client_id, user_id, expires) ' +
-        'VALUES ($1, $2, $3, $4)', [accessToken, clientId, userId, expires],
+        'VALUES ($1, $2, $3, $4)', [accessToken, clientId, user.id, expires],
         function (err, result) {
       callback(err);
       done();

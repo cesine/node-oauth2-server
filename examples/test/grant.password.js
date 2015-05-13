@@ -36,6 +36,22 @@ describe('Granting with password grant type', function () {
 
   });
 
+  it('should detect a valid user', function (done) {
+
+    request(app)
+      .post('/oauth/token')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send({
+        grant_type: 'password',
+        client_id: 'afancyagregatorapp',
+        client_secret: 'a-top-secret-key',
+        username: 'thom',
+        password: 'nightW0r1d'
+      })
+      .expect(200, /"token_type":"bearer","access_token"/i, done);
+
+  });
+
   it('should detect invalid user', function (done) {
 
     request(app)
