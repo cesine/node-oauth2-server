@@ -19,38 +19,10 @@ var express = require('express'),
   request = require('supertest'),
   should = require('should');
 
-var oauth2server = require('../');
-
-var bootstrap = function (oauthConfig) {
-  var app = express(),
-    oauth = oauth2server(oauthConfig || {
-      model: {},
-      grants: ['password', 'refresh_token']
-    });
-
-  app.set('json spaces', 0);
-  app.use(bodyParser());
-
-  app.all('/oauth/token', oauth.grant());
-
-  app.use(oauth.errorHandler());
-
-  return app;
-};
+var app = require('./../postgresql/index').app;
 
 describe('Granting with password grant type', function () {
   it('should detect missing parameters', function (done) {
-    var app = bootstrap({
-      model: {
-        getClient: function (id, secret, callback) {
-          callback(false, true);
-        },
-        grantTypeAllowed: function (clientId, grantType, callback) {
-          callback(false, true);
-        }
-      },
-      grants: ['password']
-    });
 
     request(app)
       .post('/oauth/token')
@@ -65,22 +37,6 @@ describe('Granting with password grant type', function () {
   });
 
   it('should detect invalid user', function (done) {
-    var app = bootstrap({
-      model: {
-        getClient: function (id, secret, callback) {
-          callback(false, true);
-        },
-        grantTypeAllowed: function (clientId, grantType, callback) {
-          callback(false, true);
-        },
-        getUser: function (uname, pword, callback) {
-          uname.should.equal('thomseddon');
-          pword.should.equal('nightworld');
-          callback(false, false); // Fake invalid user
-        }
-      },
-      grants: ['password']
-    });
 
     request(app)
       .post('/oauth/token')
