@@ -107,11 +107,11 @@ model.saveAccessToken = function (accessToken, clientId, expires, user, callback
   });
 };
 
-model.saveRefreshToken = function (refreshToken, clientId, expires, userId, callback) {
+model.saveRefreshToken = function (refreshToken, clientId, expires, user, callback) {
   pg.connect(connString, function (err, client, done) {
     if (err) return callback(err);
     client.query('INSERT INTO oauth_refresh_tokens(refresh_token, client_id, user_id, ' +
-        'expires) VALUES ($1, $2, $3, $4)', [refreshToken, clientId, userId, expires],
+        'expires) VALUES ($1, $2, $3, $4)', [refreshToken, clientId, user.id, expires],
         function (err, result) {
       callback(err);
       done();
