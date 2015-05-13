@@ -29,8 +29,8 @@ describe('Granting with password grant type', function () {
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send({
         grant_type: 'password',
-        client_id: 'thom',
-        client_secret: 'nightworld'
+        client_id: 'afancyagregatorapp',
+        client_secret: 'a-top-secret-key'
       })
       .expect(400, /missing parameters. \\"username\\" and \\"password\\"/i, done);
 
@@ -43,10 +43,10 @@ describe('Granting with password grant type', function () {
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send({
         grant_type: 'password',
-        client_id: 'thom',
-        client_secret: 'nightworld',
-        username: 'thomseddon',
-        password: 'nightworld'
+        client_id: 'afancyagregatorapp',
+        client_secret: 'a-top-secret-key',
+        username: 'notauser',
+        password: 'nightW0r1d'
       })
       .expect(400, /user credentials are invalid/i, done);
 
